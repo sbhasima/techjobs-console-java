@@ -2,7 +2,10 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+
+import static org.launchcode.techjobs.console.JobData.findAll;
 
 /**
  * Created by LaunchCode
@@ -38,10 +41,10 @@ public class TechJobs {
                 String columnChoice = getUserSelection("List", columnChoices);
 
                 if (columnChoice.equals("all")) {
-                    printJobs(JobData.findAll());
+                    printJobs(findAll());
                 } else {
 
-                    ArrayList<String> results = JobData.findAll(columnChoice);
+                    ArrayList<String> results = findAll(columnChoice);
 
                     System.out.println("\n*** All " + columnChoices.get(columnChoice) + " Values ***");
 
@@ -58,10 +61,20 @@ public class TechJobs {
 
                 // What is their search term?
                 System.out.println("\nSearch term: ");
+
                 String searchTerm = in.nextLine();
+                if (!searchField.contains(searchTerm)){
+                    System.out.println("Searched term could not be found.");
+                }
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+
+
+                    printJobs(JobData.findByValue(searchField, searchTerm));
+                    // JobData.findByValue(searchField, searchTerm);
+
+                    //System.out.println("Search all fields not yet implemented.");
+
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -110,7 +123,22 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        for (HashMap job:someJobs){
+            System.out.println("******");
+            String jobLine = job.toString();
+            String[] jobLists = jobLine.split(",");
 
-        System.out.println("printJobs is not implemented yet");
+
+            for (String jobList: jobLists){
+                jobList = jobList.replace("{"," ");
+                jobList = jobList.replace("}"," ");
+                jobList = jobList.replace("=", ":");
+                System.out.println(jobList);
+            }
+            System.out.println("******");
+        }
+
     }
+
+
 }
